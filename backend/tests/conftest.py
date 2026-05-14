@@ -83,7 +83,7 @@ class FakeProvider:
         self.fundamentals[ticker.upper()] = fundamentals
 
     # ── DataProvider interface ────────────────────────────────
-    def search(self, query, *, region=None, limit=10):  # noqa: ANN001
+    def search(self, query, *, region=None, limit=10):
         upper = query.upper()
         return [
             TickerInfo(ticker=upper, name=upper, exchange="FAKE", region="US", currency="USD")

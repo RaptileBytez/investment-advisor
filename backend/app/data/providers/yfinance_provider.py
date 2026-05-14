@@ -104,7 +104,7 @@ class YFinanceProvider(DataProvider):
                 ]
             except ProviderError:
                 return []
-        except Exception as exc:  # noqa: BLE001 — surface as ProviderError
+        except Exception as exc:
             log.warning("yfinance search failed for %r: %s", query, exc)
             raise ProviderError(f"search failed: {exc}") from exc
 
@@ -133,7 +133,7 @@ class YFinanceProvider(DataProvider):
             return q
         except ProviderError:
             raise
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             log.warning("yfinance quote failed for %s: %s", ticker, exc)
             raise ProviderError(f"quote failed for {ticker}: {exc}") from exc
 
@@ -160,7 +160,7 @@ class YFinanceProvider(DataProvider):
             return df.copy()
         except ProviderError:
             raise
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             log.warning("yfinance history failed for %s: %s", ticker, exc)
             raise ProviderError(f"history failed for {ticker}: {exc}") from exc
 
@@ -207,6 +207,6 @@ class YFinanceProvider(DataProvider):
             return info
         except ProviderError:
             raise
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             log.warning("yfinance info failed for %s: %s", ticker, exc)
             raise ProviderError(f"info failed for {ticker}: {exc}") from exc

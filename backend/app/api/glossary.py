@@ -6,7 +6,8 @@ from fastapi import APIRouter, HTTPException, Query
 
 from app.api.schemas import GlossaryEntryOut, GlossarySummaryOut
 from app.core.config import get_settings
-from app.glossary.loader import get as get_entry, load_all, render_html
+from app.glossary.loader import get as get_entry
+from app.glossary.loader import load_all, render_html
 
 router = APIRouter()
 

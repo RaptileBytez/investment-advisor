@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):  # noqa: ARG001
+async def lifespan(app: FastAPI):
     configure_logging()
     settings = get_settings()
     log.info(

@@ -173,7 +173,7 @@ def _user_to_dict(user: User) -> dict:
     }
 
 
-def _tx_to_dict(tx) -> dict:  # noqa: ANN001
+def _tx_to_dict(tx) -> dict:
     return {
         "id": tx.id,
         "ticker": tx.ticker,

@@ -50,7 +50,7 @@ def evaluate(
     return _verdict_to_schema(verdict)
 
 
-def _verdict_to_schema(v) -> VerdictOut:  # noqa: ANN001
+def _verdict_to_schema(v) -> VerdictOut:
     from app.api.schemas import RiskSummaryOut
 
     risk = None

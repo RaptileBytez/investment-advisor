@@ -39,7 +39,7 @@ class _FakeProvider:
     def __init__(self, mapping: dict[str, float]):
         self._mapping = mapping
 
-    def get_quote(self, ticker):  # noqa: ANN001
+    def get_quote(self, ticker):
         from datetime import UTC, datetime
 
         from app.data.provider import ProviderError, Quote
@@ -54,9 +54,9 @@ class _FakeProvider:
         )
 
     # The other methods are unused here.
-    def search(self, *args, **kwargs): ...     # noqa: ANN001
-    def get_history(self, *args, **kwargs): ...  # noqa: ANN001
-    def get_fundamentals(self, *args, **kwargs): ...  # noqa: ANN001
+    def search(self, *args, **kwargs): ...
+    def get_history(self, *args, **kwargs): ...
+    def get_fundamentals(self, *args, **kwargs): ...
 
 
 def test_risk_free_rate_uses_live_when_available():

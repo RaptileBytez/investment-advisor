@@ -17,7 +17,6 @@ numbers."""
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 from typing import ClassVar
 
@@ -56,7 +55,7 @@ def simulate_dca(
     total_invested = 0.0
     units = 0.0
     equity = []
-    for date, price in schedule.items():
+    for _date, price in schedule.items():
         units += per_period_amount / float(price)
         total_invested += per_period_amount
         equity.append(units * float(price))

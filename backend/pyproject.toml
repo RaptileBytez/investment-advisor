@@ -85,12 +85,31 @@ select = [
   "RUF",  # ruff-specific
 ]
 ignore = [
-  "E501",  # line length is handled by formatter
+  "E501",   # line length — handled by the formatter
+  "RUF002", # en-dashes in docstrings are intentional typography
+  "RUF003", # en-dashes in comments are intentional typography
+  "UP042",  # `class Foo(str, enum.Enum)` works; not migrating to StrEnum just yet
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["B011"]
 "alembic/versions/*" = ["E402", "F401"]
+"alembic/env.py" = ["E402"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's Depends/Query/Header/Path/Body live in default-arg position
+# by design; flake8-bugbear's B008 doesn't understand the framework.
+extend-immutable-calls = [
+  "fastapi.Depends",
+  "fastapi.Query",
+  "fastapi.Path",
+  "fastapi.Header",
+  "fastapi.Body",
+  "fastapi.Cookie",
+  "fastapi.File",
+  "fastapi.Form",
+  "fastapi.Security",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

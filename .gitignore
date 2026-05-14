@@ -56,6 +56,10 @@ backend/instance/
 *.key
 secrets/
 
+# Root-level npm artefacts (npm should run inside frontend/ only)
+/package-lock.json
+/package.json
+
 # ──────────────────────────────────────────────────────────────
 # Editors / OS
 # ──────────────────────────────────────────────────────────────
@@ -63,6 +67,7 @@ secrets/
 .vscode/*
 !.vscode/settings.json.example
 !.vscode/extensions.json
+.claude/
 .DS_Store
 Thumbs.db
 desktop.ini

@@ -16,7 +16,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.data.exchanges import info_for
-from app.db.models import Holding, Transaction, TradeSide, User, WatchlistItem
+from app.db.models import Holding, TradeSide, Transaction, User, WatchlistItem
 
 log = logging.getLogger(__name__)
 

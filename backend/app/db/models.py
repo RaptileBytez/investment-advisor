@@ -6,13 +6,13 @@ import enum
 from datetime import date, datetime
 
 from sqlalchemy import (
+    JSON,
     Date,
     DateTime,
     Enum,
     Float,
     ForeignKey,
     Integer,
-    JSON,
     String,
     UniqueConstraint,
     func,
@@ -47,10 +47,10 @@ class User(Base):
     )
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
-    holdings: Mapped[list["Holding"]] = relationship(back_populates="user", cascade="all, delete-orphan")
-    transactions: Mapped[list["Transaction"]] = relationship(back_populates="user", cascade="all, delete-orphan")
-    watchlist: Mapped[list["WatchlistItem"]] = relationship(back_populates="user", cascade="all, delete-orphan")
-    snapshots: Mapped[list["Snapshot"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    holdings: Mapped[list[Holding]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    transactions: Mapped[list[Transaction]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    watchlist: Mapped[list[WatchlistItem]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    snapshots: Mapped[list[Snapshot]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 
 class Holding(Base):
