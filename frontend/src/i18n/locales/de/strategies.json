@@ -1,0 +1,12 @@
+{
+  "names": {
+    "buy_hold": "Buy & Hold",
+    "dca": "Sparplan (DCA)",
+    "value": "Value",
+    "momentum": "Momentum"
+  },
+  "composite_label": "Gesamt-Score",
+  "rationale": "Begründung",
+  "key_inputs": "Wichtige Eingaben",
+  "tolerance_note": "Gesamt-Score {{score}}/100 bei {{tolerance}}er Risikoneigung."
+}

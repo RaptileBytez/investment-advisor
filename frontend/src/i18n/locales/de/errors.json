@@ -1,0 +1,11 @@
+{
+  "generic": "Etwas ist schiefgegangen. Bitte erneut versuchen.",
+  "not_found": "Nicht gefunden.",
+  "ticker_not_found": "Kein Ticker für „{{query}}\" gefunden.",
+  "history_unavailable": "Nicht genügend Kurshistorie, um diese Kennzahl zu berechnen.",
+  "trade_validation": {
+    "quantity_required": "Stückzahl muss größer als null sein.",
+    "price_required": "Preis muss null oder positiv sein.",
+    "oversell": "Du kannst nicht mehr Anteile verkaufen, als du hältst."
+  }
+}

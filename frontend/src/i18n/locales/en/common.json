@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "Investment Advisor",
+    "tagline": "Risk-aware investing, with explanations."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "portfolio": "Portfolio",
+    "strategies": "Strategies",
+    "stocks": "Stocks",
+    "trade_log": "Trade Log",
+    "learn": "Learn"
+  },
+  "actions": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "hold": "Hold",
+    "watch": "Watch",
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "log_trade": "Log a trade",
+    "more": "Learn more"
+  },
+  "verdict": {
+    "buy": "Buy",
+    "hold": "Hold",
+    "sell": "Sell",
+    "watch": "Watch"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "de": "German"
+  },
+  "tolerance": {
+    "label": "Risk tolerance",
+    "conservative": "Conservative",
+    "balanced": "Balanced",
+    "aggressive": "Aggressive"
+  },
+  "disclaimer": "Past performance is not indicative of future results. This tool provides educational guidance, not financial advice."
+}

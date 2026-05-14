@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "Investment Advisor",
+    "tagline": "Risikobewusst investieren — mit Erklärungen."
+  },
+  "nav": {
+    "dashboard": "Übersicht",
+    "portfolio": "Portfolio",
+    "strategies": "Strategien",
+    "stocks": "Aktien",
+    "trade_log": "Trade-Log",
+    "learn": "Lernen"
+  },
+  "actions": {
+    "buy": "Kaufen",
+    "sell": "Verkaufen",
+    "hold": "Halten",
+    "watch": "Beobachten",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "search": "Suchen",
+    "log_trade": "Trade erfassen",
+    "more": "Mehr erfahren"
+  },
+  "verdict": {
+    "buy": "Kaufen",
+    "hold": "Halten",
+    "sell": "Verkaufen",
+    "watch": "Beobachten"
+  },
+  "language": {
+    "label": "Sprache",
+    "en": "Englisch",
+    "de": "Deutsch"
+  },
+  "tolerance": {
+    "label": "Risikoneigung",
+    "conservative": "Konservativ",
+    "balanced": "Ausgewogen",
+    "aggressive": "Offensiv"
+  },
+  "disclaimer": "Vergangene Performance ist keine Garantie für zukünftige Ergebnisse. Diese Anwendung bietet Bildungsinformationen, keine Finanzberatung."
+}

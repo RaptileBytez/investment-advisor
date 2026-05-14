@@ -1,0 +1,14 @@
+{
+  "card_title": "Risikoprofil",
+  "metrics": {
+    "volatility": "Volatilität",
+    "sharpe": "Sharpe Ratio",
+    "beta": "Beta (β)",
+    "max_drawdown": "Max. Drawdown",
+    "value_at_risk_95": "Value at Risk (95 %)",
+    "concentration": "Konzentration (HHI)",
+    "currency_exposure": "Währungsexposure"
+  },
+  "benchmark_against": "Benchmark: {{name}}",
+  "risk_free_rate_label": "Risikofreier Zins"
+}

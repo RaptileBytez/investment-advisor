@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-background: 255 255 255;
+    --color-foreground: 17 17 17;
+    --color-muted: 245 245 245;
+    --color-accent: 59 130 246;
+    --color-border: 229 229 229;
+    --color-positive: 22 163 74;
+    --color-negative: 220 38 38;
+  }
+
+  :root.dark {
+    --color-background: 10 10 10;
+    --color-foreground: 245 245 245;
+    --color-muted: 31 31 31;
+    --color-accent: 96 165 250;
+    --color-border: 51 51 51;
+    --color-positive: 74 222 128;
+    --color-negative: 248 113 113;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}

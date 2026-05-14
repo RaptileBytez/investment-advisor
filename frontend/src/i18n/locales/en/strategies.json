@@ -1,0 +1,12 @@
+{
+  "names": {
+    "buy_hold": "Buy & Hold",
+    "dca": "Dollar-Cost Averaging",
+    "value": "Value",
+    "momentum": "Momentum"
+  },
+  "composite_label": "Composite score",
+  "rationale": "Rationale",
+  "key_inputs": "Key inputs",
+  "tolerance_note": "Composite score {{score}}/100 against a {{tolerance}} profile."
+}

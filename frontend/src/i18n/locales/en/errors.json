@@ -1,0 +1,11 @@
+{
+  "generic": "Something went wrong. Try again.",
+  "not_found": "Not found.",
+  "ticker_not_found": "We couldn't find a ticker for \"{{query}}\".",
+  "history_unavailable": "Not enough price history to compute this metric.",
+  "trade_validation": {
+    "quantity_required": "Quantity must be greater than zero.",
+    "price_required": "Price must be zero or positive.",
+    "oversell": "You can't sell more shares than you currently hold."
+  }
+}
