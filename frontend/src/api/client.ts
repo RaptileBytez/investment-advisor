@@ -34,6 +34,21 @@ export interface HistoryOut {
   bars: HistoryBar[];
 }
 
+export interface FundamentalsOut {
+  ticker: string;
+  currency: string;
+  market_cap: number | null;
+  trailing_pe: number | null;
+  forward_pe: number | null;
+  price_to_book: number | null;
+  debt_to_equity: number | null;
+  dividend_yield: number | null;
+  free_cash_flow_yield: number | null;
+  eps: number | null;
+  sector: string | null;
+  industry: string | null;
+}
+
 export interface RiskSummaryOut {
   volatility: number;
   sharpe: number;
@@ -145,6 +160,8 @@ export const api = {
     request<HistoryOut>(
       `/api/stocks/history/${encodeURIComponent(ticker)}?period=${period}&interval=${interval}`,
     ),
+  fundamentals: (ticker: string) =>
+    request<FundamentalsOut>(`/api/stocks/fundamentals/${encodeURIComponent(ticker)}`),
 
   // ── portfolio ──
   holdings: () => request<HoldingOut[]>("/api/portfolio/holdings"),
