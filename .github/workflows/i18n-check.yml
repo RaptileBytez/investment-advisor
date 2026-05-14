@@ -1,0 +1,29 @@
+name: i18n key parity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/src/i18n/**"
+      - "tools/check_i18n_keys.py"
+      - ".github/workflows/i18n-check.yml"
+  pull_request:
+    paths:
+      - "frontend/src/i18n/**"
+      - "tools/check_i18n_keys.py"
+      - ".github/workflows/i18n-check.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify all locales mirror the English key set
+        run: python tools/check_i18n_keys.py
