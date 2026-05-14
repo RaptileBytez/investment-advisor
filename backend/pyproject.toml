@@ -1,0 +1,117 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "investment-advisor-backend"
+version = "0.1.0"
+description = "Backend for the Investment Advisor — strategies, risk, portfolio, data layer."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "RaptileBytez", email = "raptile.bytez@gmail.com" }]
+keywords = ["finance", "investing", "portfolio", "risk", "stocks"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Office/Business :: Financial :: Investment",
+]
+
+dependencies = [
+  # Web stack
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.5",
+  "python-dotenv>=1.0",
+  # Database
+  "sqlalchemy>=2.0",
+  "alembic>=1.13",
+  # Quant / data
+  "pandas>=2.2",
+  "numpy>=2.0",
+  "scipy>=1.14",
+  "yfinance>=0.2.50",
+  # Markdown rendering for glossary entries
+  "markdown-it-py>=3.0",
+]
+
+[project.optional-dependencies]
+# pandas-ta has historically been the slowest to support new Python releases.
+# Kept in a separate extra so the core install still works on 3.13/3.14 even
+# if pandas-ta has no wheel yet. Install with: pip install -e ".[indicators]"
+indicators = [
+  "pandas-ta>=0.3.14b",
+]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.24",
+  "pytest-cov>=5.0",
+  "httpx>=0.27",            # test client for FastAPI
+  "ruff>=0.6",
+  "mypy>=1.11",
+]
+
+[project.urls]
+Homepage = "https://github.com/RaptileBytez/investment-advisor"
+Repository = "https://github.com/RaptileBytez/investment-advisor"
+Issues = "https://github.com/RaptileBytez/investment-advisor/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+# ──────────────────────────────────────────────────────────────
+# Tooling
+# ──────────────────────────────────────────────────────────────
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "W",    # pycodestyle warnings
+  "F",    # pyflakes
+  "I",    # isort
+  "B",    # flake8-bugbear
+  "UP",   # pyupgrade
+  "SIM",  # flake8-simplify
+  "C4",   # flake8-comprehensions
+  "RUF",  # ruff-specific
+]
+ignore = [
+  "E501",  # line length is handled by formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+"alembic/versions/*" = ["E402", "F401"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+asyncio_mode = "auto"
+markers = [
+  "integration: tests that hit external services (yfinance, etc.)",
+  "slow: tests that take more than a few seconds",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+omit = ["*/tests/*", "*/alembic/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
