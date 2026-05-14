@@ -5,11 +5,13 @@
  * api client. Surfaces validation errors locally (quantity > 0, price ≥ 0)
  * and any backend error inline (oversell, 5xx, …).
  *
- * Convenience: Price is auto-filled from the historical close of the chosen
- * execution date (yfinance via /api/stocks/history), and Fees is computed
- * as a small percentage of the trade value. Both fields remain user-
- * editable — the moment you type into either, auto-population stops for
- * that field for the rest of the form's life.
+ * Convenience: **Price per share** is auto-filled from the historical close
+ * of the chosen execution date (yfinance via /api/stocks/history), and
+ * **Fees** is computed as a small percentage of the trade value. Both
+ * fields remain user-editable — the moment you type into either,
+ * auto-population stops for that field for the rest of the form's life.
+ * A live "Total = qty × price + fees" line keeps the per-share semantic
+ * unambiguous.
  */
 
 import { type FormEvent, useEffect, useRef, useState } from "react";
@@ -17,7 +19,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { api, ApiError } from "@/api/client";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
+import { formatCurrency } from "@/lib/format";
 
 interface TradeFormProps {
   defaultTicker?: string;
@@ -33,6 +37,8 @@ const DEFAULT_FEE_RATE = 0.0025;
 export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFormProps) {
   const { t } = useTranslation(["common", "errors"]);
   const queryClient = useQueryClient();
+  const user = useUser();
+  const fallbackCurrency = user.data?.base_currency ?? "EUR";
 
   const [ticker, setTicker] = useState(defaultTicker);
   const [side, setSide] = useState<"buy" | "sell">("buy");
@@ -44,6 +50,9 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
   const [fees, setFees] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  // Currency inferred from the live quote (yfinance reports per ticker)
+  // — falls back to the user's base currency until we have a real quote.
+  const [currency, setCurrency] = useState<string>(fallbackCurrency);
   const priceTouched = useRef(false);
   const feesTouched = useRef(false);
 
@@ -81,13 +90,18 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
     },
   });
 
-  // ── Auto-fill Price from historical close for the executed_at date ──
+  // ── Auto-fill Price per share + native currency for (ticker, date) ──
   useEffect(() => {
-    if (priceTouched.current) return;
     const symbol = ticker.trim();
     if (!symbol || !executedAt) return;
     const timer = setTimeout(async () => {
       try {
+        // Currency follows the ticker regardless of priceTouched.
+        api
+          .quote(symbol)
+          .then((q) => setCurrency(q.currency || fallbackCurrency))
+          .catch(() => {});
+        if (priceTouched.current) return;
         const hist = await api.history(symbol, "5y", "1d");
         const matched = [...hist.bars].filter((b) => b.date <= executedAt).pop();
         if (matched && !priceTouched.current) {
@@ -96,9 +110,9 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
       } catch {
         // silent — user can fill in manually
       }
-    }, 300); // debounce so we don't fire on every keystroke when typing the ticker
+    }, 300);
     return () => clearTimeout(timer);
-  }, [ticker, executedAt]);
+  }, [ticker, executedAt, fallbackCurrency]);
 
   // ── Auto-compute Fees from quantity × price × default rate ──
   useEffect(() => {
@@ -126,10 +140,16 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
     mutation.mutate();
   }
 
+  const qNum = Number(quantity);
+  const pNum = Number(price);
+  const fNum = Number(fees) || 0;
+  const showTotal = Number.isFinite(qNum) && qNum > 0 && Number.isFinite(pNum) && pNum > 0;
+  const total = showTotal ? qNum * pNum + fNum : 0;
+
   return (
     <form onSubmit={handleSubmit} className={cn("space-y-3", className)} aria-label="Trade form">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Field label="Ticker">
+        <Field label={t("common:trade.ticker")}>
           <input
             value={ticker}
             onChange={(e) => setTicker(e.target.value.toUpperCase())}
@@ -139,7 +159,7 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
             data-testid="trade-ticker"
           />
         </Field>
-        <Field label={t("common:actions.buy") + " / " + t("common:actions.sell")}>
+        <Field label={t("common:trade.side_label")}>
           <select
             value={side}
             onChange={(e) => setSide(e.target.value as "buy" | "sell")}
@@ -150,7 +170,7 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
             <option value="sell">{t("common:actions.sell")}</option>
           </select>
         </Field>
-        <Field label="Quantity">
+        <Field label={t("common:trade.quantity")}>
           <input
             type="number"
             step="any"
@@ -163,8 +183,8 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
           />
         </Field>
         <Field
-          label="Price"
-          hint={priceTouched.current ? undefined : "auto-filled from history; edit to override"}
+          label={t("common:trade.price_per_share")}
+          hint={priceTouched.current ? undefined : t("common:trade.auto_price_hint")}
         >
           <input
             type="number"
@@ -180,7 +200,7 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
             data-testid="trade-price"
           />
         </Field>
-        <Field label="Executed">
+        <Field label={t("common:trade.executed_at")}>
           <input
             type="date"
             value={executedAt}
@@ -190,11 +210,13 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
           />
         </Field>
         <Field
-          label="Fees"
+          label={t("common:trade.fees")}
           hint={
             feesTouched.current
               ? undefined
-              : `auto: ${(DEFAULT_FEE_RATE * 100).toFixed(2)}% of trade value`
+              : t("common:trade.auto_fees_hint", {
+                  rate: (DEFAULT_FEE_RATE * 100).toFixed(2),
+                })
           }
         >
           <input
@@ -211,13 +233,30 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
           />
         </Field>
       </div>
-      <Field label="Note">
+
+      {showTotal && (
+        <div
+          className="flex flex-wrap items-baseline justify-between gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm"
+          data-testid="trade-total"
+        >
+          <span className="text-foreground/70">{t("common:trade.total")}</span>
+          <span className="font-mono">
+            <span className="font-semibold">{formatCurrency(total, currency)}</span>
+            <span className="ml-2 text-xs text-foreground/50">
+              ({qNum} × {formatCurrency(pNum, currency)}
+              {fNum > 0 ? ` + ${formatCurrency(fNum, currency)}` : ""})
+            </span>
+          </span>
+        </div>
+      )}
+
+      <Field label={t("common:trade.note")}>
         <input
           value={note}
           onChange={(e) => setNote(e.target.value)}
           maxLength={500}
           className={inputCls}
-          placeholder="Optional"
+          placeholder={t("common:trade.note_placeholder")}
         />
       </Field>
 
@@ -230,7 +269,7 @@ export function TradeForm({ defaultTicker = "", onSuccess, className }: TradeFor
         </p>
       )}
 
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end">
         <button
           type="submit"
           disabled={mutation.isPending}

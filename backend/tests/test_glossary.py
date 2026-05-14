@@ -47,6 +47,24 @@ def test_loader_renders_markdown_to_html():
     assert "<h" in html or "<p>" in html
 
 
+def test_loader_renders_gfm_tables():
+    """The Sharpe-ratio entry contains a markdown table; CommonMark alone
+    wouldn't render it. The custom MarkdownIt config must enable tables."""
+    entry = loader.get("sharpe-ratio", lang="en")
+    html = loader.render_html(entry)
+    assert "<table>" in html
+    assert "<th>" in html
+
+
+def test_loader_preserves_inline_math_for_client_render():
+    """LaTeX `$...$` and `$$...$$` must round-trip unchanged so KaTeX can
+    render them on the client. CommonMark passes `$` through as text."""
+    entry = loader.get("sharpe-ratio", lang="en")
+    html = loader.render_html(entry)
+    assert "$$" in html
+    assert "\\frac" in html
+
+
 def test_glossary_list_api(wired_client):
     """The list endpoint returns every seeded entry for the requested lang."""
     client, _, _ = wired_client

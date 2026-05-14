@@ -58,6 +58,8 @@ class MomentumStrategy(Strategy):
         ticker: str,
         history: pd.DataFrame,
         fundamentals: Fundamentals | None = None,
+        *,
+        lang: str = "en",
     ) -> StrategyResult:
         if "Close" not in history.columns or history.shape[0] < self.MIN_OBSERVATIONS:
             raise ValueError(
@@ -95,7 +97,7 @@ class MomentumStrategy(Strategy):
         else:
             verdict = Verdict.HOLD
 
-        rationale = _explain(momentum, last, sma50, sma200, rsi_now, verdict)
+        rationale = _explain(momentum, last, sma50, sma200, rsi_now, verdict, lang)
 
         return StrategyResult(
             strategy=self.name,
@@ -120,8 +122,38 @@ def _explain(
     sma200: float,
     rsi: float,
     verdict: Verdict,
+    lang: str,
 ) -> str:
     mom_pct = f"{momentum * 100:+.1f}%" if not math.isnan(momentum) else "n/a"
+    if lang == "de":
+        trend = (
+            "über dem 200-Tage-Schnitt" if last > sma200 else "unter dem 200-Tage-Schnitt"
+        )
+        cross = (
+            "Golden Cross (SMA50 > SMA200)" if sma50 > sma200 else "Death Cross (SMA50 < SMA200)"
+        )
+        rsi_state = (
+            "neutral" if 40 <= rsi <= 60
+            else "stark" if 60 < rsi <= 70
+            else "überkauft" if rsi > 70
+            else "schwach" if 30 <= rsi < 40
+            else "überverkauft"
+        )
+        if verdict == Verdict.BUY:
+            return (
+                f"Positives Momentum ({mom_pct} über 12-1), Kurs {trend} mit {cross}, "
+                f"RSI {rsi:.0f} ({rsi_state}). Trend ist intakt."
+            )
+        if verdict == Verdict.SELL:
+            return (
+                f"Negatives Momentum ({mom_pct} über 12-1), Kurs {trend}; RSI {rsi:.0f} "
+                f"({rsi_state}). Trend hat gedreht."
+            )
+        return (
+            f"Gemischte Momentum-Signale: 12-1 {mom_pct}, Kurs {trend}, {cross}, "
+            f"RSI {rsi:.0f} ({rsi_state}). Bestätigung abwarten."
+        )
+    # English (default)
     trend = "above its 200-day SMA" if last > sma200 else "below its 200-day SMA"
     cross = "golden cross (SMA50 > SMA200)" if sma50 > sma200 else "death cross (SMA50 < SMA200)"
     rsi_state = (

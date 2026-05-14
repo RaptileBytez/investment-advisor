@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -42,7 +42,17 @@ export default function Layout() {
               </NavLink>
             ))}
           </nav>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <Link
+              to="/settings"
+              className="text-sm text-foreground/70 hover:text-foreground"
+              aria-label={t("settings.open")}
+              title={t("settings.open")}
+            >
+              ⚙
+            </Link>
+          </div>
         </div>
       </header>
 

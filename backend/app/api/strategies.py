@@ -33,6 +33,10 @@ def evaluate(
     else:
         tolerance = user.risk_tolerance
 
+    lang = (body.lang or user.locale or "en").lower().split("-")[0]
+    if lang not in {"en", "de"}:
+        lang = "en"
+
     engine = RecommendationEngine(provider)
     try:
         verdict = engine.evaluate(
@@ -41,6 +45,7 @@ def evaluate(
             strategy_weights=body.strategy_weights,
             risk_tolerance=tolerance,
             history_period=body.history_period,
+            lang=lang,
         )
     except ProviderError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc

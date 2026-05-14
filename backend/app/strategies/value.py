@@ -39,6 +39,8 @@ class ValueStrategy(Strategy):
         ticker: str,
         history: pd.DataFrame,
         fundamentals: Fundamentals | None = None,
+        *,
+        lang: str = "en",
     ) -> StrategyResult:
         if fundamentals is None:
             raise ValueError(f"{ticker}: value strategy requires fundamentals")
@@ -94,7 +96,7 @@ class ValueStrategy(Strategy):
         else:
             verdict = Verdict.SELL
 
-        rationale = _explain(fundamentals, signals, composite)
+        rationale = _explain(fundamentals, signals, composite, lang)
 
         return StrategyResult(
             strategy=self.name,
@@ -132,11 +134,29 @@ def _bucket(value: float | None, *, low: float, high: float, prefer: str) -> flo
     return 0.5
 
 
-def _explain(fundamentals: Fundamentals, signals: dict[str, float], score: float) -> str:
+def _explain(
+    fundamentals: Fundamentals, signals: dict[str, float], score: float, lang: str
+) -> str:
     pe = fundamentals.trailing_pe or fundamentals.forward_pe
     pe_str = f"{pe:.1f}" if pe else "n/a"
     pb_str = f"{fundamentals.price_to_book:.1f}" if fundamentals.price_to_book else "n/a"
     dy_str = f"{fundamentals.dividend_yield * 100:.1f}%" if fundamentals.dividend_yield else "n/a"
+    if lang == "de":
+        if score >= 0.65:
+            return (
+                f"Günstig in mehreren Kennzahlen (KGV {pe_str}, KBV {pb_str}, "
+                f"Dividende {dy_str}). Lohnt einen genaueren Blick für eine Value-Position."
+            )
+        if score >= 0.45:
+            return (
+                f"Fair bewertet: KGV {pe_str}, KBV {pb_str}, Dividende {dy_str}. "
+                f"Weder offensichtlich günstig noch teuer."
+            )
+        return (
+            f"Teuer im Value-Screen: KGV {pe_str}, KBV {pb_str}, Dividende {dy_str}. "
+            f"Entweder wachstumsbewertet oder die Fundamentaldaten verschlechtern sich."
+        )
+    # English (default)
     if score >= 0.65:
         return (
             f"Cheap on multiple measures (P/E {pe_str}, P/B {pb_str}, dividend {dy_str}). "

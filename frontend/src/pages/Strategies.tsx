@@ -12,7 +12,8 @@ import { formatPercent } from "@/lib/format";
 type RiskTolerance = "conservative" | "balanced" | "aggressive";
 
 export default function StrategiesPage() {
-  const { t } = useTranslation(["common", "strategies"]);
+  const { t, i18n } = useTranslation(["common", "strategies"]);
+  const lang = i18n.resolvedLanguage ?? "en";
   const strategies = useQuery({ queryKey: ["strategies"], queryFn: () => api.listStrategies() });
 
   const [ticker, setTicker] = useState("");
@@ -25,6 +26,7 @@ export default function StrategiesPage() {
         ticker: ticker.trim().toUpperCase(),
         strategies: selected.length > 0 ? selected : undefined,
         risk_tolerance: tolerance || undefined,
+        lang,
       }),
   });
 

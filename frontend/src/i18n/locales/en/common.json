@@ -41,5 +41,27 @@
     "balanced": "Balanced",
     "aggressive": "Aggressive"
   },
+  "trade": {
+    "ticker": "Ticker",
+    "side": "Side",
+    "quantity": "Quantity",
+    "price_per_share": "Price per share",
+    "executed_at": "Executed",
+    "fees": "Fees",
+    "note": "Note",
+    "total": "Total",
+    "auto_price_hint": "auto-filled from history for this date — edit to override",
+    "auto_fees_hint": "auto: {{rate}}% of trade value — edit to override",
+    "note_placeholder": "Optional",
+    "side_label": "Buy / Sell"
+  },
+  "settings": {
+    "title": "Settings",
+    "base_currency": "Base currency",
+    "locale": "Language",
+    "risk_tolerance": "Risk tolerance",
+    "saved": "Saved.",
+    "open": "Settings"
+  },
   "disclaimer": "Past performance is not indicative of future results. This tool provides educational guidance, not financial advice."
 }

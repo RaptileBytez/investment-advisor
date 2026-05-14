@@ -39,6 +39,8 @@ class BuyHoldStrategy(Strategy):
         ticker: str,
         history: pd.DataFrame,
         fundamentals: Fundamentals | None = None,
+        *,
+        lang: str = "en",
     ) -> StrategyResult:
         if "Close" not in history.columns or history.shape[0] < self.MIN_OBSERVATIONS:
             raise ValueError(
@@ -66,7 +68,7 @@ class BuyHoldStrategy(Strategy):
         else:
             verdict = Verdict.SELL
 
-        rationale = _explain(long_term_cagr, vol, dd, composite)
+        rationale = _explain(long_term_cagr, vol, dd, composite, lang)
 
         return StrategyResult(
             strategy=self.name,
@@ -83,10 +85,28 @@ class BuyHoldStrategy(Strategy):
         )
 
 
-def _explain(cagr_v: float, vol: float, dd: float, score: float) -> str:
+def _explain(cagr_v: float, vol: float, dd: float, score: float, lang: str) -> str:
     cagr_pct = f"{cagr_v * 100:.1f}%"
     vol_pct = f"{vol * 100:.1f}%"
     dd_pct = f"{dd * 100:.1f}%"
+    if lang == "de":
+        if score >= 0.65:
+            return (
+                f"Solider Langläufer: CAGR {cagr_pct}, Volatilität {vol_pct} p.a., "
+                f"max. Drawdown {dd_pct}. Geeignet für eine Buy-and-Hold-Position."
+            )
+        if score >= 0.40:
+            return (
+                f"Gemischtes Buy-and-Hold-Profil: CAGR {cagr_pct}, Volatilität {vol_pct} p.a., "
+                f"max. Drawdown {dd_pct}. Halten, wenn vorhanden; bei Neueinstieg "
+                f"strengere Filter anwenden."
+            )
+        return (
+            f"Schwaches Buy-and-Hold-Profil: CAGR {cagr_pct}, Volatilität {vol_pct} p.a., "
+            f"max. Drawdown {dd_pct}. Reduzieren oder meiden, wenn dein Ziel "
+            f"stetiges Wachstum ist."
+        )
+    # English (default)
     if score >= 0.65:
         return (
             f"Steady long-term performer: CAGR {cagr_pct}, volatility {vol_pct} p.a., "

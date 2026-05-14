@@ -22,7 +22,12 @@ log = logging.getLogger(__name__)
 
 _ENTRIES_DIR = Path(__file__).parent / "entries"
 _FRONTMATTER = re.compile(r"^---\s*\n(.*?)\n---\s*\n(.*)$", re.DOTALL)
-_md_renderer = MarkdownIt("commonmark")
+_md_renderer = MarkdownIt("commonmark").enable("table")
+# Tables are GFM, not CommonMark — but we don't want the full gfm-like
+# preset because it pulls in linkify-it-py for URL auto-linking that we
+# don't need. Math (`$...$` / `$$...$$`) is intentionally NOT rendered
+# server-side; we keep the raw TeX in the HTML so the frontend can render
+# it with KaTeX, which produces accessible MathML.
 
 
 @dataclass(frozen=True)

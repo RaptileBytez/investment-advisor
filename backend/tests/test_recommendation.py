@@ -91,3 +91,18 @@ def test_engine_rationale_includes_risk_summary(engine, fake_provider):
     verdict = engine.evaluate("ACME")
     assert "Composite score" in verdict.rationale
     assert "Risk profile" in verdict.rationale
+
+
+def test_engine_rationale_localises_to_german(engine, fake_provider):
+    _seed_rising_acme(fake_provider)
+    verdict = engine.evaluate("ACME", lang="de")
+    assert "Gesamt-Score" in verdict.rationale
+    assert "Risikoprofil" in verdict.rationale
+    assert "Composite score" not in verdict.rationale
+    assert "Risk profile" not in verdict.rationale
+
+
+def test_engine_falls_back_to_english_for_unsupported_lang(engine, fake_provider):
+    _seed_rising_acme(fake_provider)
+    verdict = engine.evaluate("ACME", lang="zz")
+    assert "Composite score" in verdict.rationale

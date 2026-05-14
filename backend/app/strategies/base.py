@@ -69,6 +69,8 @@ class Strategy(ABC):
         ticker: str,
         history: pd.DataFrame,
         fundamentals: Fundamentals | None = None,
+        *,
+        lang: str = "en",
     ) -> StrategyResult:
         """Return this strategy's read on `ticker`.
 
@@ -78,6 +80,8 @@ class Strategy(ABC):
                 at least a `Close` column.
             fundamentals: Latest fundamentals snapshot, required iff
                 `requires_fundamentals` is True.
+            lang: ISO 639-1 code for the rationale text. "en" and "de" are
+                supported; anything else falls back to English.
 
         Raises:
             ValueError: if inputs are insufficient for this strategy.

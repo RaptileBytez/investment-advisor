@@ -15,8 +15,9 @@ const PERIODS = ["1mo", "6mo", "1y", "5y", "max"] as const;
 type Period = (typeof PERIODS)[number];
 
 export default function StockDetail() {
-  const { t } = useTranslation(["common", "strategies"]);
+  const { t, i18n } = useTranslation(["common", "strategies"]);
   const { ticker = "" } = useParams<{ ticker: string }>();
+  const lang = i18n.resolvedLanguage ?? "en";
   const [period, setPeriod] = useState<Period>("1y");
   const [showTradeForm, setShowTradeForm] = useState(false);
 
@@ -27,15 +28,15 @@ export default function StockDetail() {
   });
 
   const evaluate = useMutation({
-    mutationFn: () => api.evaluate({ ticker }),
+    mutationFn: () => api.evaluate({ ticker, lang }),
   });
 
-  // Auto-evaluate on first mount and whenever the ticker changes — that's
-  // the "rationale" the user expects to see immediately.
+  // Auto-evaluate on first mount and on ticker / language change — so the
+  // rationale you see always matches the active UI language.
   useEffect(() => {
     if (ticker) evaluate.mutate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticker]);
+  }, [ticker, lang]);
 
   const change = quote.data?.change_pct;
   const changeColor = change == null ? "" : change >= 0 ? "text-positive" : "text-negative";

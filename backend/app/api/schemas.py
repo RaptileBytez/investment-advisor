@@ -96,6 +96,7 @@ class EvaluateRequest(BaseModel):
     strategy_weights: dict[str, float] | None = None
     risk_tolerance: str | None = None     # "conservative" | "balanced" | "aggressive"
     history_period: str = "5y"
+    lang: str | None = None               # "en" | "de"; defaults to user.locale
 
 
 # ──────────────────────────────────────────────────────────────

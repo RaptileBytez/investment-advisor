@@ -8,6 +8,7 @@ import StrategiesPage from "./pages/Strategies";
 import TradeLog from "./pages/TradeLog";
 import Learn from "./pages/Learn";
 import LearnEntry from "./pages/LearnEntry";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/trades" element={<TradeLog />} />
         <Route path="/learn" element={<Learn />} />
         <Route path="/learn/:term" element={<LearnEntry />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

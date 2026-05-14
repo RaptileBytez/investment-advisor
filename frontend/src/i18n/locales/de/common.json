@@ -41,5 +41,27 @@
     "balanced": "Ausgewogen",
     "aggressive": "Offensiv"
   },
+  "trade": {
+    "ticker": "Ticker",
+    "side": "Seite",
+    "quantity": "Stückzahl",
+    "price_per_share": "Preis pro Aktie",
+    "executed_at": "Ausgeführt",
+    "fees": "Gebühren",
+    "note": "Notiz",
+    "total": "Gesamt",
+    "auto_price_hint": "automatisch aus der Historie für dieses Datum — bei Bedarf überschreiben",
+    "auto_fees_hint": "automatisch: {{rate}} % des Handelsvolumens — bei Bedarf überschreiben",
+    "note_placeholder": "Optional",
+    "side_label": "Kauf / Verkauf"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "base_currency": "Basiswährung",
+    "locale": "Sprache",
+    "risk_tolerance": "Risikoneigung",
+    "saved": "Gespeichert.",
+    "open": "Einstellungen"
+  },
   "disclaimer": "Vergangene Performance ist keine Garantie für zukünftige Ergebnisse. Diese Anwendung bietet Bildungsinformationen, keine Finanzberatung."
 }

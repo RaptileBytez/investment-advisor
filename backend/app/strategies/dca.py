@@ -90,6 +90,8 @@ class DCAStrategy(Strategy):
         ticker: str,
         history: pd.DataFrame,
         fundamentals: Fundamentals | None = None,
+        *,
+        lang: str = "en",
     ) -> StrategyResult:
         if "Close" not in history.columns or history.shape[0] < self.MIN_OBSERVATIONS:
             raise ValueError(
@@ -117,7 +119,7 @@ class DCAStrategy(Strategy):
         else:
             verdict = Verdict.HOLD
 
-        rationale = _explain(sim, verdict, ticker)
+        rationale = _explain(sim, verdict, ticker, lang)
 
         return StrategyResult(
             strategy=self.name,
@@ -138,11 +140,35 @@ class DCAStrategy(Strategy):
         )
 
 
-def _explain(sim: DCASimulation, verdict: Verdict, ticker: str) -> str:
+def _explain(sim: DCASimulation, verdict: Verdict, ticker: str, lang: str) -> str:
     ret_pct = f"{sim.total_return * 100:+.1f}%"
     lump_pct = f"{sim.lump_sum_return * 100:+.1f}%"
     dd_pct = f"{sim.max_drawdown * 100:.1f}%"
     beat = sim.total_return - sim.lump_sum_return
+    if lang == "de":
+        beat_phrase = (
+            "besser als ein Einmalkauf"
+            if beat > 0.02
+            else "schlechter als ein Einmalkauf"
+            if beat < -0.02
+            else "vergleichbar mit einem Einmalkauf"
+        )
+        if verdict == Verdict.BUY:
+            return (
+                f"Historischer DCA in {ticker} ergab {ret_pct} (Einmalkauf {lump_pct}) — "
+                f"{beat_phrase} — mit max. Equity-Drawdown von {dd_pct}. "
+                f"Geeignet für regelmäßiges Ansparen."
+            )
+        if verdict == Verdict.SELL:
+            return (
+                f"DCA in {ticker} ergab historisch {ret_pct}. Ein Zeitplan rettet kein "
+                f"dauerhaft schwaches Asset; eine Alternative prüfen."
+            )
+        return (
+            f"DCA in {ticker} ergab {ret_pct} (Einmalkauf {lump_pct}) mit "
+            f"{dd_pct} max. Equity-Drawdown. Gemischt — für kleine Positionen geeignet."
+        )
+    # English (default)
     beat_phrase = (
         "outperformed a lump-sum entry"
         if beat > 0.02

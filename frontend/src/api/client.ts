@@ -184,6 +184,7 @@ export const api = {
     strategy_weights?: Record<string, number>;
     risk_tolerance?: "conservative" | "balanced" | "aggressive";
     history_period?: string;
+    lang?: string;
   }) => request<VerdictOut>("/api/strategies/evaluate", { method: "POST", body: JSON.stringify(body) }),
 
   // ── risk ──

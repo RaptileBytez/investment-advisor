@@ -88,6 +88,7 @@ class RecommendationEngine:
         strategy_weights: dict[str, float] | None = None,
         risk_tolerance: RiskTolerance = RiskTolerance.BALANCED,
         history_period: str = "5y",
+        lang: str = "en",
     ) -> FinalVerdict:
         ticker = ticker.upper()
         weights = self._resolve_weights(strategies, strategy_weights, risk_tolerance)
@@ -99,14 +100,16 @@ class RecommendationEngine:
         results: list[StrategyResult] = []
         for strat in strategies_to_run:
             try:
-                results.append(strat.score(ticker, history, fundamentals))
+                results.append(strat.score(ticker, history, fundamentals, lang=lang))
             except ValueError as exc:
                 log.info("strategy %s skipped for %s: %s", strat.name, ticker, exc)
 
         composite = self._composite_score(results, weights)
         action = self._verdict_for(composite, risk_tolerance)
         risk = self._risk_summary(ticker, history)
-        rationale = self._compose_rationale(action, composite, results, risk, risk_tolerance)
+        rationale = self._compose_rationale(
+            action, composite, results, risk, risk_tolerance, lang
+        )
 
         return FinalVerdict(
             ticker=ticker,
@@ -205,8 +208,14 @@ class RecommendationEngine:
         results: list[StrategyResult],
         risk: RiskSummary | None,
         tolerance: RiskTolerance,
+        lang: str = "en",
     ) -> str:
         if not results:
+            if lang == "de":
+                return (
+                    "Nicht genügend Strategie-Signale für eine Empfehlung. "
+                    "Risikokennzahlen werden zum Kontext angezeigt."
+                )
             return (
                 "Not enough strategy signal to form a recommendation. "
                 "Showing risk metrics for context."
@@ -216,11 +225,27 @@ class RecommendationEngine:
         anchor = max(agreeing or results, key=lambda r: r.score)
         bits = [anchor.rationale]
         if risk:
+            if lang == "de":
+                bits.append(
+                    f"Risikoprofil: Volatilität {risk.volatility * 100:.1f}% p.a., "
+                    f"β {risk.beta:.2f} vs. {risk.benchmark}, "
+                    f"max. Drawdown {risk.max_drawdown * 100:.1f}%."
+                )
+            else:
+                bits.append(
+                    f"Risk profile: volatility {risk.volatility * 100:.1f}% p.a., "
+                    f"β {risk.beta:.2f} vs. {risk.benchmark}, "
+                    f"max drawdown {risk.max_drawdown * 100:.1f}%."
+                )
+        if lang == "de":
+            tolerance_de = {"conservative": "konservativ", "balanced": "ausgewogen", "aggressive": "offensiv"}[
+                tolerance.value
+            ]
             bits.append(
-                f"Risk profile: volatility {risk.volatility * 100:.1f}% p.a., "
-                f"β {risk.beta:.2f} vs. {risk.benchmark}, max drawdown {risk.max_drawdown * 100:.1f}%."
+                f"Gesamt-Score {score * 100:.0f}/100 bei {tolerance_de}er Risikoneigung."
             )
-        bits.append(
-            f"Composite score {score * 100:.0f}/100 against a {tolerance.value} profile."
-        )
+        else:
+            bits.append(
+                f"Composite score {score * 100:.0f}/100 against a {tolerance.value} profile."
+            )
         return " ".join(bits)
