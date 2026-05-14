@@ -12,6 +12,8 @@ from app import __version__
 from app.api import glossary, portfolio, risk, stocks, strategies
 from app.core.config import get_settings
 from app.core.logging import configure_logging
+from app.db.models import Base
+from app.db.session import engine
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +22,10 @@ log = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     configure_logging()
     settings = get_settings()
+    # Create any missing tables on first run. Alembic remains the canonical
+    # tool for schema *changes*, but the initial bootstrap shouldn't require
+    # the user to run `alembic upgrade head` before the app is usable.
+    Base.metadata.create_all(engine)
     log.info(
         "Investment Advisor backend v%s starting (provider=%s, languages=%s)",
         __version__,

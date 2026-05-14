@@ -20,7 +20,9 @@
     "cancel": "Cancel",
     "search": "Search",
     "log_trade": "Log a trade",
-    "more": "Learn more"
+    "more": "Learn more",
+    "evaluate": "Evaluate",
+    "evaluating": "Evaluating…"
   },
   "verdict": {
     "buy": "Buy",

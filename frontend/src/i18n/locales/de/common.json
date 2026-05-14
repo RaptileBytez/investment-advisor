@@ -20,7 +20,9 @@
     "cancel": "Abbrechen",
     "search": "Suchen",
     "log_trade": "Trade erfassen",
-    "more": "Mehr erfahren"
+    "more": "Mehr erfahren",
+    "evaluate": "Bewerten",
+    "evaluating": "Wird bewertet…"
   },
   "verdict": {
     "buy": "Kaufen",

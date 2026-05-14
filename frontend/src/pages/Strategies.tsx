@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { api } from "@/api/client";
+import { api, ApiError } from "@/api/client";
 import { Card } from "@/components/Card";
 import { RiskCard } from "@/components/RiskCard";
 import { VerdictBadge } from "@/components/VerdictBadge";
@@ -100,7 +100,9 @@ export default function StrategiesPage() {
               disabled={!ticker.trim() || evaluate.isPending}
               className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {evaluate.isPending ? "…" : t("common:actions.more")}
+              {evaluate.isPending
+                ? t("common:actions.evaluating")
+                : t("common:actions.evaluate")}
             </button>
           </div>
         </form>
@@ -108,7 +110,11 @@ export default function StrategiesPage() {
 
       {evaluate.isError && (
         <Card className="border-negative/30">
-          <p className="text-sm text-negative">Could not evaluate that ticker.</p>
+          <p className="text-sm text-negative">
+            {evaluate.error instanceof ApiError
+              ? `Could not evaluate ${ticker || "that ticker"}: ${evaluate.error.message}`
+              : "Could not evaluate that ticker."}
+          </p>
         </Card>
       )}
 

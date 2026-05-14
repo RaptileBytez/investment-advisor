@@ -58,6 +58,19 @@ def _safe_float(value: Any) -> float | None:
     return f
 
 
+def _normalise_dividend_yield(value: Any) -> float | None:
+    """yfinance ≥0.2.61 reports dividendYield as a percentage (e.g. 1.83 = 1.83 %)
+    while older versions returned it as a decimal (0.0183). Downstream code
+    expects a *decimal* throughout. Anything above 1.0 is almost certainly the
+    percent form (real sustainable dividend yields top out around 12 %)."""
+    f = _safe_float(value)
+    if f is None:
+        return None
+    if f > 1.0:
+        f /= 100.0
+    return f
+
+
 class YFinanceProvider(DataProvider):
     name: ClassVar[str] = "yfinance"
 
@@ -189,7 +202,7 @@ class YFinanceProvider(DataProvider):
             forward_pe=_safe_float(info.get("forwardPE")),
             price_to_book=_safe_float(info.get("priceToBook")),
             debt_to_equity=_safe_float(info.get("debtToEquity")),
-            dividend_yield=_safe_float(info.get("dividendYield")),
+            dividend_yield=_normalise_dividend_yield(info.get("dividendYield")),
             free_cash_flow_yield=fcf_yield,
             eps=_safe_float(info.get("trailingEps")),
             sector=info.get("sector"),
