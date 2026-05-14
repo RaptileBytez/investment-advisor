@@ -45,8 +45,9 @@ def test_log_returns_basic():
 # Volatility
 # ──────────────────────────────────────────────────────────────
 def test_volatility_zero_for_constant_returns():
+    # numpy's std emits ~1e-17 floating-point dust on a constant series.
     ret = pd.Series([0.01] * 100)
-    assert annualized_volatility(ret) == 0.0
+    assert annualized_volatility(ret) == pytest.approx(0.0, abs=1e-12)
 
 
 def test_volatility_annualizes_correctly():

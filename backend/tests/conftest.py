@@ -11,10 +11,14 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
+from app.api.deps import get_current_user, get_data_provider, get_portfolio_service
 from app.data.provider import Fundamentals, ProviderError, Quote, TickerInfo
 from app.db.models import Base
+from app.db.session import get_db
 from app.main import create_app
+from app.portfolio.service import PortfolioService
 
 
 @pytest.fixture(scope="session")
@@ -34,6 +38,7 @@ def db_session() -> Iterator[Session]:
     engine = create_engine(
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
         future=True,
     )
     Base.metadata.create_all(engine)
@@ -111,6 +116,52 @@ def fake_provider() -> FakeProvider:
 # ──────────────────────────────────────────────────────────────
 # Synthetic price helpers reused across strategy / engine tests
 # ──────────────────────────────────────────────────────────────
+@pytest.fixture()
+def wired_client(fake_provider):
+    """A TestClient with an in-memory DB and FakeProvider wired in via
+    FastAPI dependency overrides. Shared across API + glossary tests."""
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+        future=True,
+    )
+    Base.metadata.create_all(engine)
+    SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+
+    def override_db():
+        session = SessionLocal()
+        try:
+            yield session
+        finally:
+            session.close()
+
+    session = SessionLocal()
+    service = PortfolioService(session)
+    user = service.get_or_create_user("test@local", base_currency="EUR", locale="en")
+
+    def override_user():
+        return user
+
+    def override_service():
+        return service
+
+    def override_provider():
+        return fake_provider
+
+    app = create_app()
+    app.dependency_overrides[get_db] = override_db
+    app.dependency_overrides[get_portfolio_service] = override_service
+    app.dependency_overrides[get_current_user] = override_user
+    app.dependency_overrides[get_data_provider] = override_provider
+
+    with TestClient(app) as client:
+        yield client, fake_provider, user
+
+    session.close()
+    engine.dispose()
+
+
 def rising_ohlcv(n: int = 500, start: float = 100.0, end: float = 200.0) -> pd.DataFrame:
     closes = np.linspace(start, end, n)
     idx = pd.date_range("2020-01-01", periods=n, freq="B")

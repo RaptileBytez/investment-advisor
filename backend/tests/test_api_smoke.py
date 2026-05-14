@@ -9,61 +9,8 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-from app.api.deps import get_current_user, get_data_provider, get_portfolio_service
-from app.db.models import Base, RiskTolerance, User
-from app.db.session import get_db
-from app.main import create_app
-from app.portfolio.service import PortfolioService
-from tests.conftest import FakeProvider, rising_ohlcv
-
-
-@pytest.fixture()
-def wired_client(fake_provider):
-    """A TestClient with an in-memory DB and FakeProvider wired in."""
-    engine = create_engine(
-        "sqlite:///:memory:",
-        connect_args={"check_same_thread": False},
-        future=True,
-    )
-    Base.metadata.create_all(engine)
-    SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
-
-    def override_db():
-        session = SessionLocal()
-        try:
-            yield session
-        finally:
-            session.close()
-
-    # Single shared session for the test so changes are visible across calls.
-    session = SessionLocal()
-    service = PortfolioService(session)
-    user = service.get_or_create_user("test@local", base_currency="EUR", locale="en")
-
-    def override_user():
-        return user
-
-    def override_service():
-        return service
-
-    def override_provider():
-        return fake_provider
-
-    app = create_app()
-    app.dependency_overrides[get_db] = override_db
-    app.dependency_overrides[get_portfolio_service] = override_service
-    app.dependency_overrides[get_current_user] = override_user
-    app.dependency_overrides[get_data_provider] = override_provider
-
-    with TestClient(app) as client:
-        yield client, fake_provider, user
-
-    session.close()
-    engine.dispose()
+from tests.conftest import rising_ohlcv
 
 
 # ── Health & strategies list ──────────────────────────────────
