@@ -5,6 +5,7 @@
   },
   "nav": {
     "dashboard": "Übersicht",
+    "markets": "Märkte",
     "portfolio": "Portfolio",
     "strategies": "Strategien",
     "stocks": "Aktien",
@@ -62,6 +63,44 @@
     "risk_tolerance": "Risikoneigung",
     "saved": "Gespeichert.",
     "open": "Einstellungen"
+  },
+  "markets": {
+    "title": "Märkte",
+    "subtitle": "Sieh, was sich bewegt — und welche Aktien die Engine derzeit als Kauf einstuft.",
+    "indices": "Wichtige Indizes",
+    "loading": "Wird geladen…",
+    "error": "Marktdaten konnten nicht geladen werden.",
+    "no_picks": "Aktuell keine Kaufkandidaten. Probier eine andere Region oder Risikoneigung.",
+    "no_movers": "Keine Bewegungen verfügbar.",
+    "stale": "Daten sind möglicherweise einige Minuten alt.",
+    "refresh": "Aktualisieren",
+    "tab": {
+      "picks": "Top-Empfehlungen",
+      "movers": "Größte Bewegungen"
+    },
+    "movers_sub": {
+      "gainers": "Gewinner",
+      "losers": "Verlierer"
+    },
+    "region": {
+      "label": "Region",
+      "all": "Alle Regionen",
+      "us": "USA",
+      "de": "Deutschland",
+      "gb": "Großbritannien",
+      "fr": "Frankreich",
+      "jp": "Japan"
+    },
+    "col": {
+      "ticker": "Ticker",
+      "name": "Name",
+      "exchange": "Börse",
+      "price": "Preis",
+      "change": "Veränderung",
+      "verdict": "Empfehlung",
+      "rationale": "Begründung",
+      "confidence": "Konfidenz"
+    }
   },
   "disclaimer": "Vergangene Performance ist keine Garantie für zukünftige Ergebnisse. Diese Anwendung bietet Bildungsinformationen, keine Finanzberatung."
 }

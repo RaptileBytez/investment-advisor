@@ -211,6 +211,139 @@ class YFinanceProvider(DataProvider):
         _fundamentals_cache.set(ticker, result)
         return result
 
+    # ── Batch fetches (market-discovery sweep) ────────────────
+    def get_quotes_batch(self, tickers: list[str]) -> dict[str, Quote]:
+        """Bulk-fetch via `yf.download(period='2d')` and derive last + previous
+        close per ticker. Cached entries are served first; only the missing
+        tickers go on the wire."""
+        out: dict[str, Quote] = {}
+        missing: list[str] = []
+        for raw in tickers:
+            t = raw.upper()
+            cached = _quote_cache.get(t)
+            if cached is not None:
+                out[t] = cached
+            else:
+                missing.append(t)
+        if not missing:
+            return out
+        try:
+            df = yf.download(
+                tickers=missing,
+                period="2d",
+                interval="1d",
+                group_by="ticker",
+                threads=True,
+                progress=False,
+                auto_adjust=False,
+            )
+        except Exception as exc:
+            log.warning("yfinance batch download failed for %d tickers: %s", len(missing), exc)
+            return out
+        if df is None or df.empty:
+            return out
+        now = datetime.now(UTC)
+        # Single-ticker requests come back with a flat column index, multi
+        # with a (ticker, field) MultiIndex.
+        if len(missing) == 1:
+            single = missing[0]
+            closes = df.get("Close")
+            if closes is None or closes.dropna().empty:
+                return out
+            series = closes.dropna()
+            last = _safe_float(series.iloc[-1])
+            prev = _safe_float(series.iloc[-2]) if len(series) >= 2 else None
+            if last is None:
+                return out
+            q = Quote(
+                ticker=single,
+                price=last,
+                currency=info_for(single).currency,
+                timestamp=now,
+                previous_close=prev,
+            )
+            _quote_cache.set(single, q)
+            out[single] = q
+            return out
+        for t in missing:
+            try:
+                closes = df[t]["Close"].dropna()
+            except (KeyError, AttributeError):
+                continue
+            if closes.empty:
+                continue
+            last = _safe_float(closes.iloc[-1])
+            prev = _safe_float(closes.iloc[-2]) if len(closes) >= 2 else None
+            if last is None:
+                continue
+            q = Quote(
+                ticker=t,
+                price=last,
+                currency=info_for(t).currency,
+                timestamp=now,
+                previous_close=prev,
+            )
+            _quote_cache.set(t, q)
+            out[t] = q
+        return out
+
+    def get_histories_batch(
+        self,
+        tickers: list[str],
+        *,
+        period: str = "1y",
+        interval: str = "1d",
+    ) -> dict[str, pd.DataFrame]:
+        """Bulk-fetch via `yf.download(period=..., interval=...)`. Per-ticker
+        history cache is consulted first; only missing tickers hit yfinance."""
+        out: dict[str, pd.DataFrame] = {}
+        missing: list[str] = []
+        for raw in tickers:
+            t = raw.upper()
+            cached = _history_cache.get(f"{t}|{period}|{interval}")
+            if cached is not None:
+                out[t] = cached.copy()
+            else:
+                missing.append(t)
+        if not missing:
+            return out
+        try:
+            df = yf.download(
+                tickers=missing,
+                period=period,
+                interval=interval,
+                group_by="ticker",
+                threads=True,
+                progress=False,
+                auto_adjust=False,
+            )
+        except Exception as exc:
+            log.warning("yfinance batch history failed for %d tickers: %s", len(missing), exc)
+            return out
+        if df is None or df.empty:
+            return out
+        if len(missing) == 1:
+            single = missing[0]
+            sub = df[["Open", "High", "Low", "Close", "Volume"]].dropna(how="all")
+            if not sub.empty:
+                sub = sub.copy()
+                sub.index = pd.to_datetime(sub.index)
+                _history_cache.set(f"{single}|{period}|{interval}", sub)
+                out[single] = sub.copy()
+            return out
+        for t in missing:
+            try:
+                sub = df[t][["Open", "High", "Low", "Close", "Volume"]].dropna(how="all")
+            except (KeyError, AttributeError):
+                continue
+            if sub.empty:
+                continue
+            sub = sub.copy()
+            sub.index = pd.to_datetime(sub.index)
+            _history_cache.set(f"{t}|{period}|{interval}", sub)
+            out[t] = sub.copy()
+        return out
+
     # ── Internals ─────────────────────────────────────────────
     def _ticker_info(self, ticker: str) -> dict[str, Any]:
         try:

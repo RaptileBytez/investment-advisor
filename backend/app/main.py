@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
-from app.api import glossary, portfolio, risk, stocks, strategies
+from app.api import glossary, markets, portfolio, risk, stocks, strategies
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 from app.db.models import Base
@@ -62,6 +62,7 @@ def create_app() -> FastAPI:
     app.include_router(strategies.router, prefix="/api/strategies", tags=["strategies"])
     app.include_router(risk.router,       prefix="/api/risk",       tags=["risk"])
     app.include_router(glossary.router,   prefix="/api/glossary",   tags=["glossary"])
+    app.include_router(markets.router,    prefix="/api/markets",    tags=["markets"])
 
     return app
 

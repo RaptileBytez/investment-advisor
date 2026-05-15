@@ -121,6 +121,43 @@ export interface GlossaryEntry extends GlossarySummary {
   related: string[];
 }
 
+export interface IndexSnapshotOut {
+  ticker: string;
+  name: string;
+  region: string;
+  price: number;
+  previous_close: number | null;
+  change: number | null;
+  change_pct: number | null;
+  currency: string;
+}
+
+export interface MoverOut {
+  ticker: string;
+  name: string;
+  exchange: string;
+  region: string;
+  currency: string;
+  price: number;
+  previous_close: number | null;
+  change: number | null;
+  change_pct: number | null;
+}
+
+export interface TopPickOut {
+  ticker: string;
+  name: string;
+  exchange: string;
+  region: string;
+  currency: string;
+  price: number;
+  change_pct: number | null;
+  action: "buy" | "hold" | "sell" | "watch";
+  confidence: number;
+  rationale: string;
+  score: number;
+}
+
 export class ApiError extends Error {
   constructor(public readonly status: number, message: string) {
     super(message);
@@ -196,4 +233,21 @@ export const api = {
     request<GlossarySummary[]>(`/api/glossary?lang=${encodeURIComponent(lang)}`),
   glossaryEntry: (key: string, lang: string) =>
     request<GlossaryEntry>(`/api/glossary/${encodeURIComponent(key)}?lang=${encodeURIComponent(lang)}`),
+
+  // ── markets ──
+  indices: () => request<IndexSnapshotOut[]>("/api/markets/indices"),
+  movers: (params: { region?: string; kind?: "gainers" | "losers"; limit?: number }) => {
+    const qs = new URLSearchParams();
+    if (params.region) qs.set("region", params.region);
+    if (params.kind) qs.set("kind", params.kind);
+    if (params.limit) qs.set("limit", String(params.limit));
+    return request<MoverOut[]>(`/api/markets/movers?${qs.toString()}`);
+  },
+  topPicks: (params: { region?: string; limit?: number; lang?: string }) => {
+    const qs = new URLSearchParams();
+    if (params.region) qs.set("region", params.region);
+    if (params.limit) qs.set("limit", String(params.limit));
+    if (params.lang) qs.set("lang", params.lang);
+    return request<TopPickOut[]>(`/api/markets/top-picks?${qs.toString()}`);
+  },
 };

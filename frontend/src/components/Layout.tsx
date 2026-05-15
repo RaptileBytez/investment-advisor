@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_KEYS = [
   { to: "/", key: "dashboard" },
+  { to: "/markets", key: "markets" },
   { to: "/portfolio", key: "portfolio" },
   { to: "/strategies", key: "strategies" },
   { to: "/trades", key: "trade_log" },

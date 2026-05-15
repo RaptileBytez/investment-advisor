@@ -100,6 +100,44 @@ class DataProvider(ABC):
     def get_fundamentals(self, ticker: str) -> Fundamentals:
         """Latest available fundamental ratios for a ticker."""
 
+    def get_quotes_batch(self, tickers: list[str]) -> dict[str, Quote]:
+        """Bulk-fetch quotes for many tickers.
+
+        Default implementation falls back to per-ticker `get_quote()` — fine
+        for tests with `FakeProvider`. Real providers should override with a
+        true batch call (e.g. `yf.download(...)`) so the market-discovery
+        sweep over hundreds of tickers stays cheap.
+
+        Tickers that fail individually are dropped from the result rather
+        than failing the entire batch.
+        """
+        out: dict[str, Quote] = {}
+        for ticker in tickers:
+            try:
+                out[ticker.upper()] = self.get_quote(ticker)
+            except ProviderError:
+                continue
+        return out
+
+    def get_histories_batch(
+        self,
+        tickers: list[str],
+        *,
+        period: str = "1y",
+        interval: str = "1d",
+    ) -> dict[str, pd.DataFrame]:
+        """Bulk-fetch OHLCV histories for many tickers.
+
+        Same fallback contract as `get_quotes_batch`. Real providers override.
+        """
+        out: dict[str, pd.DataFrame] = {}
+        for ticker in tickers:
+            try:
+                out[ticker.upper()] = self.get_history(ticker, period=period, interval=interval)
+            except ProviderError:
+                continue
+        return out
+
 
 class ProviderError(RuntimeError):
     """Raised when the upstream provider fails or returns unusable data."""
