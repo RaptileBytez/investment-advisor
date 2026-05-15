@@ -5,6 +5,7 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "markets": "Markets",
     "portfolio": "Portfolio",
     "strategies": "Strategies",
     "stocks": "Stocks",
@@ -62,6 +63,44 @@
     "risk_tolerance": "Risk tolerance",
     "saved": "Saved.",
     "open": "Settings"
+  },
+  "markets": {
+    "title": "Markets",
+    "subtitle": "Discover what's moving — and what the engine currently rates as a Buy.",
+    "indices": "Key Indices",
+    "loading": "Loading…",
+    "error": "Could not load market data.",
+    "no_picks": "No buy candidates right now. Try a different region or risk tolerance.",
+    "no_movers": "No movers available.",
+    "stale": "Data may be a few minutes old.",
+    "refresh": "Refresh",
+    "tab": {
+      "picks": "Top Picks",
+      "movers": "Top Movers"
+    },
+    "movers_sub": {
+      "gainers": "Gainers",
+      "losers": "Losers"
+    },
+    "region": {
+      "label": "Region",
+      "all": "All regions",
+      "us": "United States",
+      "de": "Germany",
+      "gb": "United Kingdom",
+      "fr": "France",
+      "jp": "Japan"
+    },
+    "col": {
+      "ticker": "Ticker",
+      "name": "Name",
+      "exchange": "Exchange",
+      "price": "Price",
+      "change": "Change",
+      "verdict": "Verdict",
+      "rationale": "Rationale",
+      "confidence": "Confidence"
+    }
   },
   "disclaimer": "Past performance is not indicative of future results. This tool provides educational guidance, not financial advice."
 }

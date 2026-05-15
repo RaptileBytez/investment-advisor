@@ -2,6 +2,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
+import Markets from "./pages/Markets";
 import Portfolio from "./pages/Portfolio";
 import StockDetail from "./pages/StockDetail";
 import StrategiesPage from "./pages/Strategies";
@@ -15,6 +16,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/markets" element={<Markets />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/strategies" element={<StrategiesPage />} />
         <Route path="/stocks/:ticker" element={<StockDetail />} />

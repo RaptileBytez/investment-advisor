@@ -107,6 +107,24 @@ class FakeProvider:
             raise ProviderError(f"no fake fundamentals for {upper}")
         return self.fundamentals[upper]
 
+    def get_quotes_batch(self, tickers: list[str]) -> dict[str, Quote]:
+        out: dict[str, Quote] = {}
+        for t in tickers:
+            upper = t.upper()
+            if upper in self.quotes:
+                out[upper] = self.quotes[upper]
+        return out
+
+    def get_histories_batch(
+        self, tickers: list[str], *, period: str = "1y", interval: str = "1d"
+    ) -> dict[str, pd.DataFrame]:
+        out: dict[str, pd.DataFrame] = {}
+        for t in tickers:
+            upper = t.upper()
+            if upper in self.histories:
+                out[upper] = self.histories[upper]
+        return out
+
 
 @pytest.fixture()
 def fake_provider() -> FakeProvider:

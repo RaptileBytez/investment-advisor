@@ -187,6 +187,46 @@ class UserPreferencesIn(BaseModel):
 
 
 # ──────────────────────────────────────────────────────────────
+# Markets discovery
+# ──────────────────────────────────────────────────────────────
+class IndexSnapshotOut(BaseModel):
+    ticker: str
+    name: str
+    region: str
+    price: float
+    previous_close: float | None = None
+    change: float | None = None
+    change_pct: float | None = None
+    currency: str
+
+
+class MoverOut(BaseModel):
+    ticker: str
+    name: str
+    exchange: str
+    region: str
+    currency: str
+    price: float
+    previous_close: float | None = None
+    change: float | None = None
+    change_pct: float | None = None
+
+
+class TopPickOut(BaseModel):
+    ticker: str
+    name: str
+    exchange: str
+    region: str
+    currency: str
+    price: float
+    change_pct: float | None = None
+    action: str
+    confidence: float
+    rationale: str
+    score: float
+
+
+# ──────────────────────────────────────────────────────────────
 # Glossary
 # ──────────────────────────────────────────────────────────────
 class GlossaryEntryOut(BaseModel):

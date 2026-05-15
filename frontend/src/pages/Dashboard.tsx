@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { api } from "@/api/client";
 import { Card } from "@/components/Card";
+import { IndexRibbon } from "@/components/IndexRibbon";
 import { SearchBox } from "@/components/SearchBox";
 import { useUser } from "@/hooks/useUser";
 import { formatCurrency, formatSignedPercent } from "@/lib/format";
@@ -22,6 +23,8 @@ export default function Dashboard() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("nav.dashboard")}</h1>
         <p className="text-sm text-foreground/60">{t("app.tagline")}</p>
       </header>
+
+      <IndexRibbon variant="compact" />
 
       <SearchBox />
 
