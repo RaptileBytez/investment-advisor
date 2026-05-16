@@ -8,7 +8,7 @@ import { api, ApiError } from "@/api/client";
 import { Card } from "@/components/Card";
 
 export default function LearnEntry() {
-  const { t, i18n } = useTranslation("glossary");
+  const { t, i18n } = useTranslation(["glossary", "common"]);
   const { term = "" } = useParams<{ term: string }>();
   const lang = i18n.resolvedLanguage ?? "en";
   const articleRef = useRef<HTMLDivElement>(null);
@@ -42,7 +42,7 @@ export default function LearnEntry() {
         ← {t("page_title")}
       </Link>
 
-      {entry.isLoading && <p className="text-sm text-foreground/60">Loading…</p>}
+      {entry.isLoading && <p className="text-sm text-foreground/60">{t("common:common.loading")}</p>}
       {entry.isError && (
         <p className="text-sm text-negative">
           {entry.error instanceof ApiError && entry.error.status === 404
@@ -67,7 +67,7 @@ export default function LearnEntry() {
           />
           {entry.data.related.length > 0 && (
             <div className="mt-6 border-t border-border pt-4">
-              <p className="mb-2 text-xs text-foreground/60">Related</p>
+              <p className="mb-2 text-xs text-foreground/60">{t("common:common.related")}</p>
               <ul className="flex flex-wrap gap-2">
                 {entry.data.related.map((key) => (
                   <li key={key}>

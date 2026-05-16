@@ -41,24 +41,24 @@ export default function TradeLog() {
         <TradeForm onSuccess={() => txs.refetch()} />
       </Card>
 
-      <Card title="History">
-        {txs.isLoading && <p className="text-sm text-foreground/60">Loading…</p>}
-        {txs.isError && <p className="text-sm text-negative">Could not load transactions.</p>}
+      <Card title={t("trade_log.history")}>
+        {txs.isLoading && <p className="text-sm text-foreground/60">{t("common.loading")}</p>}
+        {txs.isError && <p className="text-sm text-negative">{t("trade_log.error_load")}</p>}
         {txs.data && txs.data.length === 0 && (
-          <p className="text-sm text-foreground/70">No trades yet.</p>
+          <p className="text-sm text-foreground/70">{t("trade_log.empty")}</p>
         )}
         {txs.data && txs.data.length > 0 && (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-foreground/60">
-                  <th className="py-1">Date</th>
-                  <th className="py-1">Ticker</th>
-                  <th className="py-1">Side</th>
-                  <th className="py-1 text-right">Qty</th>
-                  <th className="py-1 text-right">Price</th>
-                  <th className="py-1 text-right">Fees</th>
-                  <th className="py-1">Note</th>
+                  <th className="py-1">{t("cols.date")}</th>
+                  <th className="py-1">{t("cols.ticker")}</th>
+                  <th className="py-1">{t("cols.side")}</th>
+                  <th className="py-1 text-right">{t("cols.qty")}</th>
+                  <th className="py-1 text-right">{t("cols.price")}</th>
+                  <th className="py-1 text-right">{t("cols.fees")}</th>
+                  <th className="py-1">{t("cols.note")}</th>
                 </tr>
               </thead>
               <tbody>

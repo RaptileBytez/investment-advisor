@@ -3,5 +3,6 @@
   "page_subtitle": "Klar verständliche Erklärungen zu jeder Kennzahl, jedem Signal und jeder Strategie.",
   "search_placeholder": "Begriff suchen …",
   "no_results": "Keine passenden Begriffe.",
-  "translated_soon": "Übersetzung folgt — wird vorerst auf Englisch angezeigt."
+  "translated_soon": "Übersetzung folgt — wird vorerst auf Englisch angezeigt.",
+  "what_is": "Was ist {{term}}?"
 }

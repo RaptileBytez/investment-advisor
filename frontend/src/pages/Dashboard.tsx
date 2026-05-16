@@ -28,20 +28,22 @@ export default function Dashboard() {
       {user.isError && (
         <Card className="border-negative/30">
           <p className="text-sm text-negative">
-            Could not reach the backend. Run <code>uvicorn app.main:app --reload</code> in the
-            <code> backend/</code> directory.
+            {t("dashboard.backend_error", {
+              cmd: "uvicorn app.main:app --reload",
+              dir: "backend/",
+            })}
           </p>
         </Card>
       )}
 
       {valuation.data && (
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card title="Total value">
+          <Card title={t("dashboard.cards.total_value")}>
             <p className="text-2xl font-mono">
               {formatCurrency(valuation.data.total_value, valuation.data.base_currency)}
             </p>
           </Card>
-          <Card title="Unrealised P&L">
+          <Card title={t("dashboard.cards.unrealised_pl")}>
             <p
               className={`text-2xl font-mono ${valuation.data.total_unrealized_pl >= 0 ? "text-positive" : "text-negative"}`}
             >
@@ -51,17 +53,19 @@ export default function Dashboard() {
               </span>
             </p>
           </Card>
-          <Card title="Positions">
+          <Card title={t("dashboard.cards.positions")}>
             <p className="text-2xl font-mono">{valuation.data.positions.length}</p>
             <p className="mt-1 text-xs text-foreground/60">
-              Concentration HHI: {valuation.data.concentration_hhi.toFixed(2)}
+              {t("dashboard.concentration_label", {
+                value: valuation.data.concentration_hhi.toFixed(2),
+              })}
             </p>
           </Card>
         </div>
       )}
 
       {valuation.data && valuation.data.positions.length > 0 && (
-        <Card title="Top holdings">
+        <Card title={t("dashboard.cards.top_holdings")}>
           <ul className="divide-y divide-border">
             {valuation.data.positions
               .slice()
@@ -87,8 +91,7 @@ export default function Dashboard() {
       {valuation.data && valuation.data.positions.length === 0 && (
         <Card>
           <p className="text-sm text-foreground/70">
-            Your portfolio is empty. Search a ticker above, open its detail page, and use
-            "{t("actions.log_trade")}" to start tracking trades.
+            {t("dashboard.empty", { action: t("actions.log_trade") })}
           </p>
         </Card>
       )}

@@ -19,18 +19,17 @@ export default function Portfolio() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("nav.portfolio")}</h1>
       </header>
 
-      {valuation.isLoading && <p className="text-sm text-foreground/60">Loading…</p>}
+      {valuation.isLoading && <p className="text-sm text-foreground/60">{t("common.loading")}</p>}
       {valuation.isError && (
         <Card className="border-negative/30">
-          <p className="text-sm text-negative">Could not load portfolio.</p>
+          <p className="text-sm text-negative">{t("portfolio.error_load")}</p>
         </Card>
       )}
 
       {valuation.data && valuation.data.positions.length === 0 && (
         <Card>
           <p className="text-sm">
-            No holdings yet. Search a ticker on the dashboard and use "{t("actions.log_trade")}" to
-            record your first position.
+            {t("portfolio.empty", { action: t("actions.log_trade") })}
           </p>
         </Card>
       )}
@@ -38,12 +37,12 @@ export default function Portfolio() {
       {valuation.data && valuation.data.positions.length > 0 && (
         <>
           <div className="grid gap-4 sm:grid-cols-3">
-            <Card title="Total value">
+            <Card title={t("portfolio.cards.total_value")}>
               <p className="text-2xl font-mono">
                 {formatCurrency(valuation.data.total_value, valuation.data.base_currency)}
               </p>
             </Card>
-            <Card title="Unrealised P&L">
+            <Card title={t("portfolio.cards.unrealised_pl")}>
               <p
                 className={`text-2xl font-mono ${valuation.data.total_unrealized_pl >= 0 ? "text-positive" : "text-negative"}`}
               >
@@ -53,30 +52,30 @@ export default function Portfolio() {
                 </span>
               </p>
             </Card>
-            <Card title="Concentration (HHI)">
+            <Card title={t("portfolio.cards.concentration")}>
               <p className="text-2xl font-mono">{valuation.data.concentration_hhi.toFixed(2)}</p>
               <p className="mt-1 text-xs text-foreground/60">
                 {valuation.data.concentration_hhi >= 0.5
-                  ? "Very concentrated"
+                  ? t("portfolio.concentration_band.high")
                   : valuation.data.concentration_hhi >= 0.25
-                  ? "Moderate"
-                  : "Diversified"}
+                  ? t("portfolio.concentration_band.medium")
+                  : t("portfolio.concentration_band.low")}
               </p>
             </Card>
           </div>
 
-          <Card title="Positions">
+          <Card title={t("portfolio.cards.positions")}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-foreground/60">
-                    <th className="py-1">Ticker</th>
-                    <th className="py-1 text-right">Qty</th>
-                    <th className="py-1 text-right">Avg cost</th>
-                    <th className="py-1 text-right">Price</th>
-                    <th className="py-1 text-right">Market value</th>
-                    <th className="py-1 text-right">P&L</th>
-                    <th className="py-1 text-right">Weight</th>
+                    <th className="py-1">{t("cols.ticker")}</th>
+                    <th className="py-1 text-right">{t("cols.qty")}</th>
+                    <th className="py-1 text-right">{t("cols.avg_cost")}</th>
+                    <th className="py-1 text-right">{t("cols.price")}</th>
+                    <th className="py-1 text-right">{t("cols.market_value")}</th>
+                    <th className="py-1 text-right">{t("cols.pl")}</th>
+                    <th className="py-1 text-right">{t("cols.weight")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -113,7 +112,7 @@ export default function Portfolio() {
             </div>
           </Card>
 
-          <Card title="Currency exposure">
+          <Card title={t("portfolio.cards.currency_exposure")}>
             <ul className="space-y-1 text-sm">
               {Object.entries(valuation.data.currency_exposure)
                 .sort((a, b) => b[1] - a[1])
