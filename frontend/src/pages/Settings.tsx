@@ -53,7 +53,7 @@ export default function Settings() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("settings.title")}</h1>
       </header>
 
-      {user.isLoading && <p className="text-sm text-foreground/60">Loading…</p>}
+      {user.isLoading && <p className="text-sm text-foreground/60">{t("common.loading")}</p>}
 
       {current && (
         <Card>

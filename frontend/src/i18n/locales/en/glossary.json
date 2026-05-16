@@ -3,5 +3,6 @@
   "page_subtitle": "Plain-language explanations for every metric, signal, and strategy.",
   "search_placeholder": "Search a term…",
   "no_results": "No matching terms.",
-  "translated_soon": "Translation coming soon — shown in English for now."
+  "translated_soon": "Translation coming soon — shown in English for now.",
+  "what_is": "What is {{term}}?"
 }

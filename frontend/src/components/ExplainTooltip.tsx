@@ -25,7 +25,7 @@ interface ExplainTooltipProps {
 }
 
 export function ExplainTooltip({ termKey, children, className }: ExplainTooltipProps) {
-  const { i18n, t } = useTranslation("glossary");
+  const { i18n, t } = useTranslation(["glossary", "common"]);
   const lang = i18n.resolvedLanguage ?? "en";
   const [open, setOpen] = useState(false);
 
@@ -53,7 +53,7 @@ export function ExplainTooltip({ termKey, children, className }: ExplainTooltipP
       </span>
       <button
         type="button"
-        aria-label={`What is ${termKey}?`}
+        aria-label={t("what_is", { term: termKey })}
         className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-foreground/30 text-[10px] text-foreground/60 hover:bg-muted focus:outline-none focus:ring-2 focus:ring-accent"
       >
         i
@@ -64,7 +64,7 @@ export function ExplainTooltip({ termKey, children, className }: ExplainTooltipP
           role="tooltip"
           className="absolute left-0 top-full z-20 mt-1 w-72 rounded-md border border-border bg-background p-3 text-left text-xs shadow-lg"
         >
-          {query.isLoading && <span className="text-foreground/60">Loading…</span>}
+          {query.isLoading && <span className="text-foreground/60">{t("common:common.loading")}</span>}
           {query.isError && (
             <span className="text-foreground/60">
               {query.error instanceof ApiError && query.error.status === 404

@@ -28,7 +28,9 @@
     "buy": "Kaufen",
     "hold": "Halten",
     "sell": "Verkaufen",
-    "watch": "Beobachten"
+    "watch": "Beobachten",
+    "label": "Empfehlung",
+    "aria": "Empfehlung: {{action}}"
   },
   "language": {
     "label": "Sprache",
@@ -40,6 +42,25 @@
     "conservative": "Konservativ",
     "balanced": "Ausgewogen",
     "aggressive": "Offensiv"
+  },
+  "common": {
+    "loading": "Wird geladen…",
+    "related": "Verwandt"
+  },
+  "cols": {
+    "ticker": "Ticker",
+    "name": "Name",
+    "exchange": "Börse",
+    "qty": "Stück",
+    "avg_cost": "Ø-Kosten",
+    "price": "Kurs",
+    "market_value": "Marktwert",
+    "pl": "G/V",
+    "weight": "Gewicht",
+    "date": "Datum",
+    "side": "Seite",
+    "fees": "Gebühren",
+    "note": "Notiz"
   },
   "trade": {
     "ticker": "Ticker",
@@ -62,6 +83,52 @@
     "risk_tolerance": "Risikoneigung",
     "saved": "Gespeichert.",
     "open": "Einstellungen"
+  },
+  "dashboard": {
+    "backend_error": "Backend nicht erreichbar. Führe {{cmd}} im Verzeichnis {{dir}} aus.",
+    "cards": {
+      "total_value": "Gesamtwert",
+      "unrealised_pl": "Nicht realisierte G/V",
+      "positions": "Positionen",
+      "top_holdings": "Größte Positionen"
+    },
+    "concentration_label": "Konzentration (HHI): {{value}}",
+    "empty": "Dein Portfolio ist leer. Suche oben einen Ticker, öffne die Detailseite und nutze \"{{action}}\", um Trades zu erfassen."
+  },
+  "portfolio": {
+    "error_load": "Portfolio konnte nicht geladen werden.",
+    "empty": "Noch keine Positionen. Suche auf der Übersicht einen Ticker und nutze \"{{action}}\", um deine erste Position zu erfassen.",
+    "cards": {
+      "total_value": "Gesamtwert",
+      "unrealised_pl": "Nicht realisierte G/V",
+      "concentration": "Konzentration (HHI)",
+      "positions": "Positionen",
+      "currency_exposure": "Währungsexposure"
+    },
+    "concentration_band": {
+      "high": "Sehr konzentriert",
+      "medium": "Mäßig",
+      "low": "Diversifiziert"
+    }
+  },
+  "trade_log": {
+    "history": "Verlauf",
+    "empty": "Noch keine Trades.",
+    "error_load": "Transaktionen konnten nicht geladen werden."
+  },
+  "strategies_page": {
+    "tagline": "Wähle einen Ticker und mehrere Strategien; wir kombinieren ihre Signale zu einer Empfehlung.",
+    "use_my_profile": "(eigenes Profil verwenden)",
+    "strategies_label": "Strategien",
+    "ticker_placeholder": "AAPL oder SAP.DE",
+    "error_evaluate": "{{ticker}} konnte nicht bewertet werden: {{message}}",
+    "error_evaluate_generic": "Ticker konnte nicht bewertet werden."
+  },
+  "stock_detail": {
+    "loading_chart": "Diagramm wird geladen…",
+    "error_history": "Verlauf konnte nicht geladen werden.",
+    "error_evaluate": "{{ticker}} konnte nicht bewertet werden: {{message}}",
+    "error_evaluate_short": "{{ticker}} konnte nicht bewertet werden."
   },
   "disclaimer": "Vergangene Performance ist keine Garantie für zukünftige Ergebnisse. Diese Anwendung bietet Bildungsinformationen, keine Finanzberatung."
 }

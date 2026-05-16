@@ -99,10 +99,10 @@ export default function StockDetail() {
           </div>
         }
       >
-        {history.isLoading && <p className="text-sm text-foreground/60">Loading chart…</p>}
+        {history.isLoading && <p className="text-sm text-foreground/60">{t("common:stock_detail.loading_chart")}</p>}
         {history.isError && (
           <p className="text-sm text-negative">
-            {history.error instanceof ApiError ? history.error.message : "Could not load history."}
+            {history.error instanceof ApiError ? history.error.message : t("common:stock_detail.error_history")}
           </p>
         )}
         {history.data && <ChartView bars={history.data.bars} type="candlestick" />}
@@ -112,8 +112,8 @@ export default function StockDetail() {
         <Card className="border-negative/30">
           <p className="text-sm text-negative">
             {evaluate.error instanceof ApiError
-              ? `Could not evaluate ${ticker}: ${evaluate.error.message}`
-              : `Could not evaluate ${ticker}.`}
+              ? t("common:stock_detail.error_evaluate", { ticker, message: evaluate.error.message })
+              : t("common:stock_detail.error_evaluate_short", { ticker })}
           </p>
         </Card>
       )}

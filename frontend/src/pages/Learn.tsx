@@ -7,7 +7,7 @@ import { api } from "@/api/client";
 import { Card } from "@/components/Card";
 
 export default function Learn() {
-  const { t, i18n } = useTranslation("glossary");
+  const { t, i18n } = useTranslation(["glossary", "common"]);
   const lang = i18n.resolvedLanguage ?? "en";
   const [q, setQ] = useState("");
 
@@ -40,7 +40,7 @@ export default function Learn() {
         className="w-full max-w-md rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
       />
 
-      {list.isLoading && <p className="text-sm text-foreground/60">Loading…</p>}
+      {list.isLoading && <p className="text-sm text-foreground/60">{t("common:common.loading")}</p>}
 
       {visible && visible.length === 0 && (
         <p className="text-sm text-foreground/70">{t("no_results")}</p>

@@ -28,7 +28,9 @@
     "buy": "Buy",
     "hold": "Hold",
     "sell": "Sell",
-    "watch": "Watch"
+    "watch": "Watch",
+    "label": "Verdict",
+    "aria": "Verdict: {{action}}"
   },
   "language": {
     "label": "Language",
@@ -40,6 +42,25 @@
     "conservative": "Conservative",
     "balanced": "Balanced",
     "aggressive": "Aggressive"
+  },
+  "common": {
+    "loading": "Loading…",
+    "related": "Related"
+  },
+  "cols": {
+    "ticker": "Ticker",
+    "name": "Name",
+    "exchange": "Exchange",
+    "qty": "Qty",
+    "avg_cost": "Avg cost",
+    "price": "Price",
+    "market_value": "Market value",
+    "pl": "P&L",
+    "weight": "Weight",
+    "date": "Date",
+    "side": "Side",
+    "fees": "Fees",
+    "note": "Note"
   },
   "trade": {
     "ticker": "Ticker",
@@ -62,6 +83,52 @@
     "risk_tolerance": "Risk tolerance",
     "saved": "Saved.",
     "open": "Settings"
+  },
+  "dashboard": {
+    "backend_error": "Could not reach the backend. Run {{cmd}} in the {{dir}} directory.",
+    "cards": {
+      "total_value": "Total value",
+      "unrealised_pl": "Unrealised P&L",
+      "positions": "Positions",
+      "top_holdings": "Top holdings"
+    },
+    "concentration_label": "Concentration HHI: {{value}}",
+    "empty": "Your portfolio is empty. Search a ticker above, open its detail page, and use \"{{action}}\" to start tracking trades."
+  },
+  "portfolio": {
+    "error_load": "Could not load portfolio.",
+    "empty": "No holdings yet. Search a ticker on the dashboard and use \"{{action}}\" to record your first position.",
+    "cards": {
+      "total_value": "Total value",
+      "unrealised_pl": "Unrealised P&L",
+      "concentration": "Concentration (HHI)",
+      "positions": "Positions",
+      "currency_exposure": "Currency exposure"
+    },
+    "concentration_band": {
+      "high": "Very concentrated",
+      "medium": "Moderate",
+      "low": "Diversified"
+    }
+  },
+  "trade_log": {
+    "history": "History",
+    "empty": "No trades yet.",
+    "error_load": "Could not load transactions."
+  },
+  "strategies_page": {
+    "tagline": "Pick a ticker and a set of strategies; we'll combine their signals into a single verdict.",
+    "use_my_profile": "(use my profile)",
+    "strategies_label": "Strategies",
+    "ticker_placeholder": "AAPL or SAP.DE",
+    "error_evaluate": "Could not evaluate {{ticker}}: {{message}}",
+    "error_evaluate_generic": "Could not evaluate that ticker."
+  },
+  "stock_detail": {
+    "loading_chart": "Loading chart…",
+    "error_history": "Could not load history.",
+    "error_evaluate": "Could not evaluate {{ticker}}: {{message}}",
+    "error_evaluate_short": "Could not evaluate {{ticker}}."
   },
   "disclaimer": "Past performance is not indicative of future results. This tool provides educational guidance, not financial advice."
 }

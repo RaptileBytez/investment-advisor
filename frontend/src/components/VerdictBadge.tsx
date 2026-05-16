@@ -26,7 +26,7 @@ export function VerdictBadge({ verdict, confidence, rationale, className }: Verd
     <div className={cn("space-y-2", className)}>
       <div className="flex items-center gap-3">
         <span
-          aria-label={`Verdict ${label}`}
+          aria-label={t("verdict.aria", { action: label })}
           className={cn(
             "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium",
             COLOR[verdict],

@@ -46,8 +46,7 @@ export default function StrategiesPage() {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">{t("common:nav.strategies")}</h1>
         <p className="mt-1 text-sm text-foreground/60">
-          Pick a ticker and a set of strategies; we'll combine their signals into a single
-          verdict.
+          {t("common:strategies_page.tagline")}
         </p>
       </header>
 
@@ -55,11 +54,11 @@ export default function StrategiesPage() {
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <label className="block">
-              <span className="mb-1 block text-xs text-foreground/60">Ticker</span>
+              <span className="mb-1 block text-xs text-foreground/60">{t("common:cols.ticker")}</span>
               <input
                 value={ticker}
                 onChange={(e) => setTicker(e.target.value.toUpperCase())}
-                placeholder="AAPL or SAP.DE"
+                placeholder={t("common:strategies_page.ticker_placeholder")}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </label>
@@ -70,14 +69,14 @@ export default function StrategiesPage() {
                 onChange={(e) => setTolerance(e.target.value as RiskTolerance | "")}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
               >
-                <option value="">(use my profile)</option>
+                <option value="">{t("common:strategies_page.use_my_profile")}</option>
                 <option value="conservative">{t("common:tolerance.conservative")}</option>
                 <option value="balanced">{t("common:tolerance.balanced")}</option>
                 <option value="aggressive">{t("common:tolerance.aggressive")}</option>
               </select>
             </label>
             <div className="block">
-              <span className="mb-1 block text-xs text-foreground/60">Strategies</span>
+              <span className="mb-1 block text-xs text-foreground/60">{t("common:strategies_page.strategies_label")}</span>
               <div className="flex flex-wrap gap-2 pt-1">
                 {strategies.data?.map((name) => (
                   <button
@@ -114,8 +113,11 @@ export default function StrategiesPage() {
         <Card className="border-negative/30">
           <p className="text-sm text-negative">
             {evaluate.error instanceof ApiError
-              ? `Could not evaluate ${ticker || "that ticker"}: ${evaluate.error.message}`
-              : "Could not evaluate that ticker."}
+              ? t("common:strategies_page.error_evaluate", {
+                  ticker: ticker || t("common:strategies_page.ticker_placeholder"),
+                  message: evaluate.error.message,
+                })
+              : t("common:strategies_page.error_evaluate_generic")}
           </p>
         </Card>
       )}
